@@ -1,5 +1,6 @@
 package com.efc.cryptoapi.repository;
 
+import com.efc.cryptoapi.dto.CoinDTO;
 import com.efc.cryptoapi.entity.Coin;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -30,12 +31,12 @@ public class CoinRepository {
     return coin;
   }
 
-  public List<Coin> findAll(){
-    return jdbcTemplate.query(SELECT_ALL, new RowMapper<Coin>() {
+  public List<CoinDTO> findAll(){
+    return jdbcTemplate.query(SELECT_ALL, new RowMapper<CoinDTO>() {
       @Override
-      public Coin mapRow(ResultSet data, int rowNum) throws SQLException {
+      public CoinDTO mapRow(ResultSet data, int rowNum) throws SQLException {
 
-        Coin coin = new Coin();
+        CoinDTO coin = new CoinDTO();
         coin.setName(data.getString("name"));
         coin.setQuantity(data.getBigDecimal("quantity"));
 
