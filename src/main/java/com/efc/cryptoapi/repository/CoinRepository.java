@@ -13,9 +13,10 @@ import java.util.List;
 @Repository
 public class CoinRepository {
 
-  private static String INSERT = "INSERT INTO  coin (name, price, quantity, datetime) VALUES (?, ?, ?, ?)";
   private static String SELECT_ALL = "SELECT name, SUM(quantity) AS Quantity FROM coin GROUP BY name";
   private static String SELECT_BY_NAME = "SELECT * FROM coin WHERE UPPER(name) = ?";
+  private static String INSERT = "INSERT INTO  coin (name, price, quantity, datetime) VALUES (?, ?, ?, ?)";
+  private static String UPDATE = "UPDATE coin SET name = ?, price = ?, quantity = ? WHERE id = ?";
   private static String DELETE = "DELETE FROM coin WHERE id = ?";
 
   private JdbcTemplate jdbcTemplate;
@@ -30,6 +31,17 @@ public class CoinRepository {
       coin.getDateTime()
     };
     jdbcTemplate.update(INSERT, attr);
+    return coin;
+  }
+
+  public Coin update(Coin coin){
+    Object[] attr = new Object[] {
+      coin.getName(),
+      coin.getPrice(),
+      coin.getQuantity(),
+      coin.getId()
+    };
+    jdbcTemplate.update(UPDATE, attr);
     return coin;
   }
 
