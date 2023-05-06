@@ -17,16 +17,26 @@ public class CoinController {
   private CoinRepository coinRepository;
 
   @GetMapping
-  public ResponseEntity findAll(){
+  public ResponseEntity findAll() {
     return new ResponseEntity<>(coinRepository.findAll(), HttpStatus.OK);
   }
 
+  @GetMapping("/{name}")
+  public ResponseEntity findByName(@PathVariable("name") String name) {
+    try {
+      return new ResponseEntity<>(coinRepository.findByName(name), HttpStatus.OK);
+    }
+    catch (Exception error) {
+      return new ResponseEntity<>(error.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   @PostMapping
-  public ResponseEntity insert(@RequestBody Coin coin){
+  public ResponseEntity insert(@RequestBody Coin coin) {
     try {
       coin.setDateTime(new Timestamp(System.currentTimeMillis()));
       return new ResponseEntity<>(coinRepository.save(coin), HttpStatus.CREATED);
-    } catch (Exception error){
+    } catch (Exception error) {
       return new ResponseEntity<>(error.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

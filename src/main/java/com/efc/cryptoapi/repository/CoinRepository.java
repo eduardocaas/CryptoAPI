@@ -15,6 +15,7 @@ public class CoinRepository {
 
   private static String INSERT = "INSERT INTO  coin (name, price, quantity, datetime) VALUES (?, ?, ?, ?)";
   private static String SELECT_ALL = "SELECT name, SUM(quantity) AS Quantity FROM coin GROUP BY name";
+  private static String SELECT_BY_NAME = "SELECT * FROM coin WHERE UPPER(name) = ?";
 
   private JdbcTemplate jdbcTemplate;
 
@@ -43,6 +44,24 @@ public class CoinRepository {
         return coin;
       }
     });
+  }
+
+  public List<Coin> findByName(String name){
+    Object[] attr = new Object[] { name.toUpperCase() };
+    return jdbcTemplate.query(SELECT_BY_NAME, new RowMapper<Coin>() {
+      @Override
+      public Coin mapRow(ResultSet data, int rowNum) throws SQLException {
+
+        Coin coin = new Coin();
+        coin.setId(data.getInt("id"));
+        coin.setName(data.getString("name"));
+        coin.setPrice(data.getBigDecimal("price"));
+        coin.setQuantity(data.getBigDecimal("quantity"));
+        coin.setDateTime(data.getTimestamp("dateTime"));
+
+        return coin;
+      }
+    }, attr);
   }
 
 }
